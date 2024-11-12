@@ -1,1 +1,5 @@
 ﻿Cluster/*/data
+Standalone/data
+Testing/obj
+Testing/bin
+Testing/.vs

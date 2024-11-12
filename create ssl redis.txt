@@ -1,0 +1,37 @@
+-- create ca key 
+openssl genrsa -out redis-server-ca.key  4096
+openssl req -x509 -new -nodes -key redis-server-ca.key -sha256 -days 3650 -out redis-server-ca.crt -subj "/C=VN/ST=Hanoi/L=Hanoi/O=MyCompany/OU=ITDepartment/CN=RedisCluster"
+-- create server-cert
+openssl genrsa -out redis-server.key 4096
+openssl req -new -key redis-server.key -out redis-server.csr -subj "/C=VN/ST=Hanoi/L=Hanoi/O=MyCompany/OU=ITDepartment/CN=RedisServer"
+openssl x509 -req -in redis-server.csr -CA redis-server-ca.crt -CAkey redis-server-ca.key -CAcreateserial -out redis-server.crt -days 3650 -sha256
+
+
+openssl dhparam -out dhparam.pem 2048
+
+-- create client cert
+openssl genrsa -out redis-client.key 4096
+openssl req -new -key redis-client.key -out redis-client.csr -subj "/C=VN/ST=Hanoi/L=Hanoi/O=MyCompany/OU=ITDepartment/CN=RedisClient"
+openssl x509 -req -in redis-client.csr -CA redis-server-ca.crt -CAkey redis-server-ca.key -CAcreateserial -out redis-client.crt -days 3650 -sha256
+
+-- convert client cert to pfx
+openssl pkcs12 -export -out redis-client.pfx -inkey redis-client.key -in redis-client.crt -certfile redis-server-ca.crt -passout pass:123456
+
+
+
+ redis-cli --cluster create 127.0.0.1:6379 127.0.0.1:6379 127.0.0.1:6379 127.0.0.1:6379 127.0.0.1:6379 127.0.0.1:6379 --cluster-replicas 1
+ 
+ 
+ 
+ redis-cli -p 7006 --cluster create 172.28.0.2:7001 172.28.0.3:7002 172.28.0.4:7003 172.28.0.5:7004 172.28.0.6:7005 172.28.0.7:7006 --cluster-replicas 1
+ 
+ redis-cli -p 7002 --cluster create 172.28.0.2:7000 172.28.0.3:7001 172.28.0.4:7002  172.28.0.5:7003 172.28.0.6:7004 172.28.0.7:7005  --cluster-replicas 1 -a rediscluster  --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt 
+redis-cli --tls -a rediscluster  --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt --cluster create 172.28.0.2:6379 172.28.0.3:6379 172.28.0.4:6379  172.28.0.5:6379 172.28.0.6:6379 172.28.0.7:6379  --cluster-replicas 1 --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt 
+ 
+ 
+ 
+ redis-cli --tls -h 172.28.0.3 -p 6379 -a rediscluster --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt 
+
+ redis-cli --tls -p 6379  --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt 
+ 
+ 
