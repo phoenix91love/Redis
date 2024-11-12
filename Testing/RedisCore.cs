@@ -18,8 +18,9 @@ namespace Testing
             {
                 EndPoints = { "127.0.0.1:6379" },
                 Ssl = true,
+                Password= "passServer",
                 AbortOnConnectFail = false,
-                //  AllowAdmin = true,
+                AllowAdmin = true,
                 ConnectTimeout = 30000,
                 SyncTimeout = 30000,
                 SslProtocols = SslProtocols.Tls12,
