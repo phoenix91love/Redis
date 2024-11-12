@@ -6,7 +6,7 @@ namespace Testing
     {
         static void Main(string[] args)
         {
-            RedisCore redis = new RedisCore();
+            RedisCluster redis = new RedisCluster();
             var config = redis.InitConfig();
             redis.TestConfig(config);
             Console.WriteLine("Hello World!");
