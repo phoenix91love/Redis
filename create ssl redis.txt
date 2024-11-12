@@ -34,4 +34,4 @@ redis-cli --tls -a rediscluster  --cert /usr/local/etc/redis/ssl/redis-client.cr
 
  redis-cli --tls -p 6379  --cert /usr/local/etc/redis/ssl/redis-client.crt --key /usr/local/etc/redis/ssl/redis-client.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt 
  
- 
+ redis-cli --tls -h 192.168.1.90 -p 7000 -a passServer --cert /usr/local/etc/redis/ssl/redis-server.crt --key /usr/local/etc/redis/ssl/redis-server.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt --cluster create 192.168.1.90:7000 192.168.1.90:7001 192.168.1.90:7002 192.168.1.90:7003 192.168.1.90:7004 192.168.1.90:7005 --cluster-replicas 1

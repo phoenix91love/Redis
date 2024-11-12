@@ -7,7 +7,7 @@ services:
     command:
       - sh
       - -c
-      - redis-server /usr/local/etc/redis/redis.conf & echo "yes" | redis-cli -h 192.168.1.90 -p 7000 --cluster create 192.168.1.90:7000 192.168.1.90:7001 192.168.1.90:7002 192.168.1.90:7003 192.168.1.90:7004 192.168.1.90:7005 --cluster-replicas 1  & tail -f
+      - redis-server /usr/local/etc/redis/redis.conf & echo "yes" | redis-cli --tls -h 192.168.1.90 -p 7000 -a passServer --cert /usr/local/etc/redis/ssl/redis-server.crt --key /usr/local/etc/redis/ssl/redis-server.key --cacert /usr/local/etc/redis/ssl/redis-server-ca.crt --cluster create 192.168.1.90:7000 192.168.1.90:7001 192.168.1.90:7002 192.168.1.90:7003 192.168.1.90:7004 192.168.1.90:7005 --cluster-replicas 1  & tail -f
     volumes:
       - ./7000/redis.conf:/usr/local/etc/redis/redis.conf
       - ./7000/data:/data

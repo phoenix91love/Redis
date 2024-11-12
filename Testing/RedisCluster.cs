@@ -19,8 +19,8 @@ namespace Testing
             var config = new ConfigurationOptions
             {
                 EndPoints = { "192.168.1.90:7000", "192.168.1.90:7001", "192.168.1.90:7002", "192.168.1.90:7003", "192.168.1.90:7004", "192.168.1.90:7005" },
-               // Ssl = true,
-                //Password = "passServer",
+                Ssl = true,
+                Password = "passServer",
                 AbortOnConnectFail = false,
                 AllowAdmin = true,
                 ConnectTimeout = 30000,
@@ -28,15 +28,15 @@ namespace Testing
                 SslProtocols = SslProtocols.Tls12,
             };
 
-            //config.CertificateSelection += delegate
-            //{
-            //    return clientCert;
-            //};
+            config.CertificateSelection += delegate
+            {
+                return clientCert;
+            };
 
-            //config.CertificateValidation += (sender, cert, chain, sslPolicyErrors) =>
-            //{
-            //    return true;
-            //};
+            config.CertificateValidation += (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
 
 
             return ConnectionMultiplexer.Connect(config);

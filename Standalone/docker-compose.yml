@@ -12,3 +12,8 @@ services:
     ports:
       - 6379:6379
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G # Limit memory for container 512 MB
+          cpus: "2.0" # Limit CPU for container is 0.5 (~50% of single core)
